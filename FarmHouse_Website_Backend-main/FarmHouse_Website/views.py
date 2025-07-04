@@ -27,8 +27,12 @@ class BookingViewSet(viewsets.ModelViewSet):
                 return Response(data=conflicts, status=status.HTTP_409_CONFLICT)
 
             serializer.validated_data['bookingDate'] = date.today()
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            confirmed_booking = serializer.save()
+            if  confirmed_booking :
+                if utils.sendConfirmationEmail(confirmed_booking.guestEmail,confirmed_booking.guestName ,confirmed_booking.checkInDate, confirmed_booking.checkOutDate) :
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else :
+                    return Response("Error sending confirmation email", status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 

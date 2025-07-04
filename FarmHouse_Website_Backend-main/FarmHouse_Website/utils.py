@@ -302,22 +302,37 @@ def getMedia(review_id):
         return media_list
 
 
-# def sendOtpVerificationMail(receiver):
-#     otp = random.randint(100000, 999999)
+def sendConfirmationEmail(receiver, name, checkin, checkout):
 
-#     try:
-#         print("Sending to:", receiver)
+    try:
+        print("Sending to:", receiver)
 
-#         email = EmailMessage(
-#             subject="OTP Verification",
-#             body=f"Your OTP is {otp}",
-#             from_email=settings.EMAIL_HOST_USER,
-#             to=[receiver]
-#         )
-#         if email.send(fail_silently=False) :
-#             cache.set(receiver,otp,timeout=300)
-#             print("email sent with otp ", otp)
-#             return True
-#         return False
-#     except Exception as e:
-#         print(e)
+        email = EmailMessage(
+            subject="🏨 Booking Confirmation – Nirmal Farms",
+            body=f""""Dear {name},
+
+                    We are delighted to inform you that your booking at Nirmal Farms has been successfully confirmed! 🌿
+
+                    Your stay is reserved from {checkin} to {checkout} under the name {name}.
+
+                    We truly look forward to hosting you and ensuring you have a relaxing and memorable experience amidst nature and comfort.
+
+                    If you have any special requests or questions before your arrival, feel free to reach out to us.
+
+                    Welcome to Nirmal Farms — your peaceful getaway awaits!
+
+                    Warm regards,
+                    The Nirmal Farms Team
+                    📞 xxxxxxxxxxx
+                    📧 xxxxxxxxxxx""",
+            from_email=settings.EMAIL_HOST_USER,
+            to=[receiver]
+        )
+        
+        if email.send(fail_silently=False) :
+            print("email sent")
+            return True
+        
+        return False
+    except Exception as e:
+        print(e)
